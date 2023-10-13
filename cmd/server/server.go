@@ -61,7 +61,11 @@ func handleFunc(conn net.Conn, proverbs map[int]string) {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 	for {
 		r := rand.Intn(19) + 1
-		conn.Write([]byte(proverbs[r] + " "))
+		val, ok := proverbs[r]
+		if !ok {
+			log.Printf("Запрошенный ключ %d находится вне существующих значений в map", r)
+		}
+		conn.Write([]byte(val + " "))
 		time.Sleep(3 * time.Second)
 	}
 }
